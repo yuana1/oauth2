@@ -8,6 +8,7 @@ import (
 	"gopkg.in/oauth2.v3/errors"
 	"gopkg.in/oauth2.v3/generates"
 	"gopkg.in/oauth2.v3/models"
+	"strings"
 )
 
 // NewDefaultManager create to default authorization management instance
@@ -270,7 +271,7 @@ func (m *Manager) GenerateAccessToken(gt oauth2.GrantType, tgr *oauth2.TokenGene
 		if terr != nil {
 			err = terr
 			return
-		} else if ti.GetRedirectURI() != tgr.RedirectURI || ti.GetClientID() != tgr.ClientID {
+		} else if strings.HasPrefix(ti.GetRedirectURI() , tgr.RedirectURI) || ti.GetClientID() != tgr.ClientID {
 			err = errors.ErrInvalidAuthorizeCode
 			return
 		} else if verr := m.delAuthorizationCode(tgr.Code); verr != nil {
